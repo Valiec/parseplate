@@ -2,6 +2,8 @@
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
+#include <cstring>
+#include <limits>
 
 using namespace std;
 
