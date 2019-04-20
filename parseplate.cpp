@@ -405,7 +405,7 @@ int main(int argc, char** argv)
 		{
 			if(strcmp(argv[i],"all") == 0)
 			{
-				outtype = (single?524799:1048575); //everything (or everything but diffs in 1-file mode)
+				outtype = (single?1023:1048575); //everything (or everything but diffs in 1-file mode)
 				break;
 			}
 			else if(strcmp(argv[i],"raw_table") == 0)
@@ -444,16 +444,11 @@ int main(int argc, char** argv)
 			{
 				outtype = outtype | 256;
 			}
-			else if(strcmp(argv[i],"raw_table_diff") == 0)
+			else if(strcmp(argv[i],"results") == 0)
 			{
 				outtype = outtype | 512;
-				if(single)
-				{
-					badFmt(true, argv[i]);
-					return 2;
-				}
 			}
-			else if(strcmp(argv[i],"raw_list_diff") == 0)
+			else if(strcmp(argv[i],"raw_table_diff") == 0)
 			{
 				outtype = outtype | 1024;
 				if(single)
@@ -462,7 +457,7 @@ int main(int argc, char** argv)
 					return 2;
 				}
 			}
-			else if(strcmp(argv[i],"table_diff") == 0)
+			else if(strcmp(argv[i],"raw_list_diff") == 0)
 			{
 				outtype = outtype | 2048;
 				if(single)
@@ -471,7 +466,7 @@ int main(int argc, char** argv)
 					return 2;
 				}
 			}
-			else if(strcmp(argv[i],"list_diff") == 0)
+			else if(strcmp(argv[i],"table_diff") == 0)
 			{
 				outtype = outtype | 4096;
 				if(single)
@@ -480,7 +475,7 @@ int main(int argc, char** argv)
 					return 2;
 				}
 			}
-			else if(strcmp(argv[i],"raw_csv_list_diff") == 0)
+			else if(strcmp(argv[i],"list_diff") == 0)
 			{
 				outtype = outtype | 8192;
 				if(single)
@@ -489,7 +484,7 @@ int main(int argc, char** argv)
 					return 2;
 				}
 			}
-			else if(strcmp(argv[i],"csv_table_diff") == 0)
+			else if(strcmp(argv[i],"raw_csv_list_diff") == 0)
 			{
 				outtype = outtype | 16384;
 				if(single)
@@ -498,7 +493,7 @@ int main(int argc, char** argv)
 					return 2;
 				}
 			}
-			else if(strcmp(argv[i],"csv_list_diff") == 0)
+			else if(strcmp(argv[i],"csv_table_diff") == 0)
 			{
 				outtype = outtype | 32768;
 				if(single)
@@ -507,7 +502,7 @@ int main(int argc, char** argv)
 					return 2;
 				}
 			}
-			else if(strcmp(argv[i],"csv_results_diff") == 0)
+			else if(strcmp(argv[i],"csv_list_diff") == 0)
 			{
 				outtype = outtype | 65536;
 				if(single)
@@ -516,7 +511,7 @@ int main(int argc, char** argv)
 					return 2;
 				}
 			}
-			else if(strcmp(argv[i],"raw_csv_table_diff") == 0)
+			else if(strcmp(argv[i],"csv_results_diff") == 0)
 			{
 				outtype = outtype | 131072;
 				if(single)
@@ -525,7 +520,7 @@ int main(int argc, char** argv)
 					return 2;
 				}
 			}
-			else if(strcmp(argv[i],"results_diff") == 0)
+			else if(strcmp(argv[i],"raw_csv_table_diff") == 0)
 			{
 				outtype = outtype | 262144;
 				if(single)
@@ -534,9 +529,14 @@ int main(int argc, char** argv)
 					return 2;
 				}
 			}
-			else if(strcmp(argv[i],"results") == 0)
+			else if(strcmp(argv[i],"results_diff") == 0)
 			{
 				outtype = outtype | 524288;
+				if(single)
+				{
+					badFmt(true, argv[i]);
+					return 2;
+				}
 			}
 			else
 			{
@@ -547,7 +547,7 @@ int main(int argc, char** argv)
 	}
 	if(outtype == 0) //no flags set
 	{
-		outtype = (single?524799:1048575); //everything (or everything but diffs in 1-file mode)
+		outtype = (single?1023:1048575); //everything (or everything but diffs in 1-file mode)
 	}
 	int vals[8][12]; //values adjusted for negative control value from file 1
 	int vals_raw[8][12]; //raw values from file 1
@@ -694,9 +694,9 @@ if(outtype & 8)
 	}
 	cout << endl;
 }
-if(outtype & 524288)
+if(outtype & 512)
 {
-	if(outtype != 524288)
+	if(outtype != 512)
 	{
 		cout << "Results: " << endl;
 	}
@@ -783,90 +783,90 @@ if(outtype & 256)
 	}
 	cout << endl;
 }
-if(outtype & 512)
+if(outtype & 1024)
 {
-	if(outtype != 512)
+	if(outtype != 1024)
 	{
 		cout << "Diff Raw Values: " << endl;
 	}
 	print_tabular_diff(vals_raw, results, vals_raw2, results2, 12);
 	cout << endl;
 }
-if(outtype & 1024)
+if(outtype & 2048)
 {
-	if(outtype != 1024)
+	if(outtype != 2048)
 	{
 		cout << "Diff Detailed Raw Values: " << endl;
 	}
 	print_list_diff(vals_raw, results, vals_raw2, results2, well_contents);
 	cout << endl;
 }
-if(outtype & 2048)
+if(outtype & 4096)
 {
-	if(outtype != 2048)
+	if(outtype != 4096)
 	{
 		cout << "Diff Values Adjusted for Negative Control: " << endl;
 	}
 	print_tabular_diff(vals, results, vals2, results2, 12);
 	cout << endl;
 }
-if(outtype & 4096)
+if(outtype & 8192)
 {
-	if(outtype != 4096)
+	if(outtype != 8192)
 	{
 		cout << "Diff Detailed Values Adjusted for Negative Control: " << endl;
 	}
 	print_list_diff(vals, results, vals2, results2, well_contents);
 	cout << endl;
 }
-if(outtype & 8192)
+if(outtype & 16384)
 {
-	if(outtype != 8192)
+	if(outtype != 16384)
 	{
 		cout << "Diff Detailed Raw Values CSV: " << endl;
 	}
 	print_list_csv_diff(vals_raw, results, vals_raw2, results2, well_contents);
 	cout << endl;
 }
-if(outtype & 16384)
+if(outtype & 32768)
 {
-	if(outtype != 16384)
+	if(outtype != 32768)
 	{
 		cout << "Diff Values Adjusted for Negative Control CSV: " << endl;
 	}
 	print_csv_diff(vals, vals2);
 	cout << endl;
 }
-if(outtype & 32768)
+if(outtype & 65536)
 {
-	if(outtype != 32768)
+	if(outtype != 65536)
 	{
 		cout << "Diff Detailed Values Adjusted for Negative Control CSV: " << endl;
 	}
 	print_list_csv_diff(vals, results, vals2, results2, well_contents);
 	cout << endl;
 }
-if(outtype & 65536)
+if(outtype & 131072)
 {
-	if(outtype != 65536)
+	if(outtype != 131072)
 	{
 		cout << "Diff Results CSV: " << endl;
 	}
 	print_csv_results_diff(results, results2);
 	cout << endl;
 }
-if(outtype & 131072)
+if(outtype & 262144)
 {
-	if(outtype != 131072)
+	if(outtype != 262144)
 	{
 		cout << "Diff Raw Values CSV: " << endl;
 	}
 	print_csv_diff(vals_raw, vals_raw2);
 	cout << endl;
 }
-if(outtype & 262144)
+if(outtype & 524288)
 {
-	if(outtype != 262144)
+	if(outtype != 524288)
 	{
 		cout << "Diff Results: " << endl;
 	}
