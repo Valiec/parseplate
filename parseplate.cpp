@@ -259,7 +259,7 @@ void print_results_diff(bool values[8][12], bool values2[8][12])
 	cout << header << endl;
 	for(int i = 0; i<8; i++)
 	{
-		cout << i << " " << flush;
+		cout << letters[i] << " " << flush;
 		for(int j = 0; j<12; j++)
 		{
 			cout << parse_result(values[i][j], values2[i][j]) << "  " << flush;
@@ -547,7 +547,7 @@ int main(int argc, char** argv)
 	}
 	if(outtype == 0) //no flags set
 	{
-		outtype = 1048575; //set to all
+		outtype = (single?524799:1048575); //everything (or everything but diffs in 1-file mode)
 	}
 	int vals[8][12]; //values adjusted for negative control value from file 1
 	int vals_raw[8][12]; //raw values from file 1
@@ -560,7 +560,7 @@ int main(int argc, char** argv)
 	float temperature1 = 0; //temperature from file 1
 	float temperature2 = 0; //temperature from file 2
 	int FIELD_WIDTH = 12; //field width for output formatting
-	string well_contents[8][12] = {{"Negative control", "Dextrin", "D-maltose", "D-trehalose", "D-cellobiose", "Gentiobiose", "Sucrose", "D-turanose", "Stachyose", "Positive control", "pH 6", "pH 5"}, {"D-raffinose", "a-D-lactose", "D-mellbiose", "B-methyl-D-glucoside", "D-salicin", "N-acetyl-B-D-manosamine", "N-acetyl-B-D-galactosamine", "N-acetyl-D-galactosamine", "N-acetyl-neuraminoc acid", "1% NaCl", "4% NaCl", "8% NaCl"}, {"a-D-glucose", "D-mannose", "D-fructose", "D-galactose", "3-methyl glucose", "D-fucose", "L-fucose", "L-rhamnose", "inosine", "1% sodium lactate", "Fusidic Acid", "D-serine"}, {"D-sorbitol", "D-mannitol", "D-arabitol", "myo-inositol", "glycerol", "D-glucose-6-phosphate", "D-fructose-6-phosphate", "D-aspartic acid", "D-serine", "Troleandomycin", "Rifamycin SV", "Minocycline"}, {"Gelatin", "Glycyl-L-proline", "L-alanine", "L-arginine", "L-aspartic acid", "L-glutamic acid", "L-histidine", "L-pyroglutamic acid", "L-serine", "Lincomycin", "Guanidine HCl", "Niaproof4"}, {"Pectin", "D-galactouronic acid", "L-galactonic acid lactone", "D-gluconic acid", "D-glucuronic acid", "glucuronamide", "Mucic acid", "Quinic acid", "D-saccharic acid", "Vancomycin", "Tetrazolium violet", "Tetrazolium blue"}, {"p-hydroxy-phenylacetic acid", "methyl pyruvate", "D-lactic acid methyl ster", "L-lactic acid", "Citric acid", "a-keto-glutaric acid", "D-malic acid", "L-malic acid", "bromo-succinic acid", "nalidixic acid", "lithium chloride", "potassium tellurite"}, {"Tween 40", "g-amino-butyric acid", "a-hydroxy-butyric acid", "B-hydroxy-D,L, butyric acid", "a-keto-butyric acid", "acetoacetic acid", "propionic acid", "acetic acid", "formic acid", "aztreonam", "sodium butyrate", "sodium bromate"}};
+	string well_contents[8][12] = {{"Negative control", "Dextrin", "D-maltose", "D-trehalose", "D-cellobiose", "Gentiobiose", "Sucrose", "D-turanose", "Stachyose", "Positive control", "pH 6", "pH 5"}, {"D-raffinose", "𝛼-D-lactose", "D-Melibiose", "𝛽-methyl-D-glucoside", "D-salicin", "N-acetyl-D-glucosamine", "N-acetyl-𝛽-D-glucosamine", "N-acetyl-D-galactosamine", "N-acetyl-neuraminic acid", "1% NaCl", "4% NaCl", "8% NaCl"}, {"𝛼-D-glucose", "D-mannose", "D-fructose", "D-galactose", "3-methyl glucose", "D-fucose", "L-fucose", "L-rhamnose", "inosine", "1% sodium lactate", "Fusidic Acid", "D-serine"}, {"D-sorbitol", "D-mannitol", "D-arabitol", "myo-inositol", "Glycerol", "D-glucose-6-phosphate", "D-fructose-6-phosphate", "D-aspartic acid", "D-serine", "Troleandomycin", "Rifamycin SV", "Minocycline"}, {"Gelatin", "Glycyl-L-proline", "L-alanine", "L-arginine", "L-aspartic acid", "L-glutamic acid", "L-histidine", "L-pyroglutamic acid", "L-serine", "Lincomycin", "Guanidine HCl", "Niaproof4"}, {"Pectin", "D-galacturonic acid", "L-galactonic acid lactone", "D-gluconic acid", "D-glucuronic acid", "glucuronamide", "Mucic acid", "Quinic acid", "D-saccharic acid", "Vancomycin", "Tetrazolium violet", "Tetrazolium blue"}, {"p-hydroxy-phenylacetic acid", "methyl pyruvate", "D-lactic acid methyl ester", "L-lactic acid", "Citric acid", "𝛼-keto-glutaric acid", "D-malic acid", "L-malic acid", "bromo-succinic acid", "nalidixic acid", "lithium chloride", "potassium tellurite"}, {"Tween 40", "𝛾-amino-butyric acid", "𝛼-hydroxy-butyric acid", "𝛽-hydroxy-D, L-butyric acid", "𝛼-keto-butyric acid", "acetoacetic acid", "propionic acid", "acetic acid", "formic acid", "aztreonam", "sodium butyrate", "sodium bromate"}};
 	try
 	{
 		readFile(argv[1], data, vals_raw, temperature1);
@@ -636,7 +636,7 @@ if(outtype & 1)
 	if(!single)
 	{
 		cout << endl << argv[2] << ": " << endl;
-		print_tabular(vals_raw2, results, 12);
+		print_tabular(vals_raw2, results2, 12);
 	}
 	cout << endl;
 }
@@ -654,7 +654,7 @@ if(outtype & 2)
 	if(!single)
 	{
 		cout << endl << argv[2] << ": " << endl;
-		print_list(vals_raw2, results, well_contents);
+		print_list(vals_raw2, results2, well_contents);
 	}
 	cout << endl;
 }
@@ -672,7 +672,7 @@ if(outtype & 4)
 	if(!single)
 	{
 		cout << endl << argv[2] << ": " << endl;
-		print_tabular(vals2, results, 12);
+		print_tabular(vals2, results2, 12);
 	}
 	cout << endl;
 }
@@ -690,7 +690,7 @@ if(outtype & 8)
 	if(!single)
 	{
 		cout << endl << argv[2] << ": " << endl;
-		print_list(vals2, results, well_contents);
+		print_list(vals2, results2, well_contents);
 	}
 	cout << endl;
 }
@@ -721,7 +721,7 @@ if(outtype & 16)
 	print_list_csv(vals_raw, results, well_contents, (single?"":"1,"));
 	if(!single)
 	{
-		print_list_csv(vals_raw2, results, well_contents, "2,");
+		print_list_csv(vals_raw2, results2, well_contents, "2,");
 	}
 	cout << endl;
 }
@@ -749,7 +749,7 @@ if(outtype & 64)
 	print_list_csv(vals, results, well_contents, (single?"":"1,"));
 	if(!single)
 	{
-		print_list_csv(vals2, results, well_contents, "2,");
+		print_list_csv(vals2, results2, well_contents, "2,");
 	}
 	cout << endl;
 }
